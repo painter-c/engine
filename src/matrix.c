@@ -122,22 +122,18 @@ Matrix* mat_compose(int num_args, ...) {
 }
 
 char* mat_toString(Matrix* matrix) {
-    char buffer[256];
-    buffer[0] = '\0';
-    char* pos = buffer;
+    char* result = su_heapify("");
+    char buff[16];
+
     for (int row = 0; row < matrix->m; row++) {
         for (int col = 0; col < matrix->n; col++) {
             int index = col * matrix->m + row;
-            sprintf(pos, "%.2f", matrix->data[index]);
-            while (*pos != '\0') pos++;
-            if (col < matrix->n - 1) {
-                *pos = ' '; pos++;
-            }
+            sprintf(buff, "%.2f", matrix->data[index]);
+            result = su_append(result, buff);
+            if (col < matrix->n - 1)
+                result = su_append(result, " ");
         }
-        *pos = '\n'; pos++;
+        result = su_append(result, "\n");
     }
-    *pos = '\0';
-    char* result = malloc(sizeof(char) * (strlen(buffer) + 1));
-    strcpy(result, buffer);
     return result;
 }
