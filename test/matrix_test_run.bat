@@ -1,5 +1,5 @@
 @echo off
 
-gcc -g matrix_test.c ../src/matrix.c ../src/str-util.c -I"../include"
+gcc -g matrix_test.c ../src/math/matrix.c ../src/utils/string.c -I"../include"
 
 a
