@@ -16,3 +16,26 @@ Quaternion quat_from_axisangle(vec3 axis, float angle) {
         vec3_scale(vec3_norm(axis), sin(half_angle))
     };
 }
+
+Quaternion quat_multiply(Quaternion left, Quaternion right) {
+    return (Quaternion) {
+        left.n * right.n - vec3_dot(left.v, right.v),
+        vec3_add(
+            vec3_scale(right.v, left.n),
+            vec3_add(
+                vec3_scale(left.v, right.n),
+                vec3_cross(left.v, right.v)
+            )
+        )
+    };
+}
+
+vec3 quat_rotate_point(Quaternion q, vec3 p) {
+    Quaternion result = quat_multiply(
+        quat_multiply(
+            q, quat_from_point(p)
+        ),
+        quat_conjugate(q)
+    );
+    return result.v;
+}
