@@ -90,10 +90,27 @@ int main() {
     // In quaternion form this would be {cos(pi/4), sin(pi/4){1,0,0}}
 
     Quaternion qa = quat_from_axisangle((vec3){1,0,0}, M_PI_2);
-    Quaternion qb = quat_from_axisangle((vec3){1,0,0}, 3*M_PI_2);
-    Quaternion qc = quat_diff(qa, qb);
-    assert(CLOSE(qc.n, cos(M_PI/4) && CLOSE(qc.v.x, sin(M_PI/4)) && 
-        CLOSE(qc.v.y, 0) && CLOSE(qc.v.z, 0)));
+    Quaternion qb = quat_from_axisangle((vec3){1,0,0}, M_PI);
+    Quaternion qc = quat_diff(qb, qa);
+    assert(CLOSE(qc.n, cos(M_PI_2/2))
+        && CLOSE(qc.v.x, sin(M_PI_2/2))
+        && CLOSE(qc.v.y, 0)
+        && CLOSE(qc.v.z, 0)
+    );
+
+    // Should be able to interpolate between two different quaternions
+    // Should use SLERP (spherical linear interpolation)
+    // 
+    // Interpolating between qa and qb with a factor of .5 should result in 
+    // a quaternion similar to the difference but with half the angle:
+    // qc_slerp = {cos(pi/8), sin(pi/8){1,0,0}}
+    
+    Quaternion qc_slerp = quat_slerp(qa, qb, 0.5);
+    assert(CLOSE(qc_slerp.n, cos(M_PI_2/4))
+        && CLOSE(qc_slerp.v.x, sin(M_PI_2/4))
+        && CLOSE(qc_slerp.v.y, 0)
+        && CLOSE(qc_slerp.v.z, 0)
+    );
 
     printf("All tests passed");
 }
