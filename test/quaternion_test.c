@@ -98,6 +98,15 @@ int main() {
         && CLOSE(qc.v.z, 0)
     );
 
+    // Should be able to exponentiate a quaternion
+    // Should have half the angle of qc
+    Quaternion qc_exp = quat_exp(qc, 0.5);
+    assert(CLOSE(qc_exp.n, cos(M_PI_2/4))
+        && CLOSE(qc_exp.v.x, sin(M_PI_2/4))
+        && CLOSE(qc_exp.v.y, 0)
+        && CLOSE(qc_exp.v.z, 0)
+    );
+
     // Should be able to interpolate between two different quaternions
     // Should use SLERP (spherical linear interpolation)
     // 
