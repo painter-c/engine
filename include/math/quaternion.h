@@ -12,7 +12,13 @@ typedef struct {
 Quaternion quat_from_point(vec3 p);
 Quaternion quat_from_axisangle(vec3 axis, float angle);
 Quaternion quat_conjugate(Quaternion q);
+Quaternion quat_inverse(Quaternion q);
 Quaternion quat_multiply(Quaternion left, Quaternion right);
 vec3 quat_rotate_point(Quaternion q, vec3 p);
+Quaternion quat_difference(Quaternion left, Quaternion right);
+float quat_inner_product(Quaternion left, Quaternion right);
+float quat_magnitude(Quaternion q);
+Quaternion quat_normalize(Quaternion q);
+Quaternion quat_diff(Quaternion left, Quaternion right);
 
 #endif

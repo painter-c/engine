@@ -49,5 +49,51 @@ int main() {
     assert(CLOSE(rot_point2.x, 0) && CLOSE(rot_point2.y, 1)
         && CLOSE(rot_point2.z, 0));
 
+    // Should be able to obtain the magnitude of a quaternion
+    Quaternion q3 = {4, {4, 4, 4}};
+    // The magnitude should be sqrt(16+16+16+16) = sqrt(64) = 8
+    assert(CLOSE(quat_magnitude(q3), 8));
+
+    // Should be able to take the inner product of two quaternions (dot product)
+    // q3 dot itself should be 4^2 + 4^2 + 4^2 + 4^2 = 64
+    assert(CLOSE(quat_inner_product(q3, q3), 64));
+
+    // Should be able to normalize a quaternion
+    // norm(q3) = norm((4,4,4,4)) = (.5,.5,.5,.5)
+    Quaternion q3_norm = quat_normalize(q3);
+    assert(CLOSE(q3_norm.n, .5) && CLOSE(q3_norm.v.x, .5) && CLOSE(q3_norm.v.y, .5)
+        && CLOSE(q3_norm.v.z, .5));
+
+    // Should be able to calculate a quaternion inverse
+    // inv(q3) = conj(norm(q3)) = conj(.5,.5,.5,.5) = (.5,-.5,-.5,-.5)
+    Quaternion q3_inv = quat_inverse(q3);
+    assert(CLOSE(q3_inv.n, .5) && CLOSE(q3_inv.v.x, -.5) && CLOSE(q3_inv.v.y, -.5)
+        && CLOSE(q3_inv.v.z, -.5));
+
+    // Should be able to take the difference of two quaternions
+    // The difference between two quaternions produces a new quaternion that 
+    // describes how to rotate one quaternion to another. A quaternion is like a 
+    // displacement vector, except instead of walking some amount of units in 
+    // euclidean space, it traces some distance along the 4d complex hypersphere.
+    // 
+    // The equation of the quaternions difference is A-B = AB* where A is the 
+    // the starting quaternion and B* is the inverse of the destination 
+    // quaternion.
+    //
+    // Given two quaternions qa and qb:
+    // Where qa_axis = {1,0,0} and qa_angle = pi/2
+    // And qb_axis = {1,0,0} and qa_angle = 3*pi/2
+    // Then the quaternion difference qc = qa - qb should be
+    // qc_axis = {1,0,0}, and qa_angle = pi since both rotations 
+    // are in the same x axis and the angle between them is pi radians.
+    //
+    // In quaternion form this would be {cos(pi/4), sin(pi/4){1,0,0}}
+
+    Quaternion qa = quat_from_axisangle((vec3){1,0,0}, M_PI_2);
+    Quaternion qb = quat_from_axisangle((vec3){1,0,0}, 3*M_PI_2);
+    Quaternion qc = quat_diff(qa, qb);
+    assert(CLOSE(qc.n, cos(M_PI/4) && CLOSE(qc.v.x, sin(M_PI/4)) && 
+        CLOSE(qc.v.y, 0) && CLOSE(qc.v.z, 0)));
+
     printf("All tests passed");
 }

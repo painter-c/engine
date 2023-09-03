@@ -39,3 +39,34 @@ vec3 quat_rotate_point(Quaternion q, vec3 p) {
     );
     return result.v;
 }
+
+float quat_inner_product(Quaternion left, Quaternion right) {
+    return
+        left.n * right.n +
+        left.v.x * right.v.x + 
+        left.v.y * right.v.y + 
+        left.v.z * right.v.z;
+}
+
+float quat_magnitude(Quaternion q) {
+    return sqrt(quat_inner_product(q, q));
+}
+
+Quaternion quat_normalize(Quaternion q) {
+    float mag = quat_magnitude(q);
+    return (Quaternion) {
+        q.n / mag, {
+            q.v.x / mag,
+            q.v.y / mag,
+            q.v.z / mag
+        }
+    };
+}
+
+Quaternion quat_inverse(Quaternion q) {
+    return quat_conjugate(quat_normalize(q));
+}
+
+Quaternion quat_diff(Quaternion left, Quaternion right) {
+    return quat_multiply(left, quat_inverse(right));
+}
