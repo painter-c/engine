@@ -71,10 +71,10 @@ Quaternion quat_diff(Quaternion left, Quaternion right) {
     return quat_multiply(left, quat_inverse(right));
 }
 
+Quaternion quat_exp(Quaternion q, float t) {
+    return quat_from_axisangle(q.v, acos(q.n)*2*t);
+}
+
 Quaternion quat_slerp(Quaternion from, Quaternion to, float t) {
-    Quaternion diff = quat_diff(to, from);
-    return quat_from_axisangle(
-        diff.v,
-        acos(diff.n)*2*t
-    );
+    return quat_exp(quat_diff(to, from), t);
 }

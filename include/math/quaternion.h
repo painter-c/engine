@@ -19,6 +19,7 @@ float quat_inner_product(Quaternion left, Quaternion right);
 float quat_magnitude(Quaternion q);
 Quaternion quat_normalize(Quaternion q);
 Quaternion quat_diff(Quaternion left, Quaternion right);
+Quaternion quat_exp(Quaternion q, float t);
 Quaternion quat_slerp(Quaternion from, Quaternion to, float t);
 
 #endif
