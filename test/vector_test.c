@@ -1,45 +1,113 @@
+#include "criterion/criterion.h"
 #include "math/vector.h"
-#include <assert.h>
-#include <stdio.h>
-#include <math.h>
 
-#define CLOSE(a, b) ((a) > (b) - 0.001) && ((a) < (b) + 0.001)
+// UTILITY FUNCTIONS
 
-int main() {
+float min(float a, float b) {
+    return a < b ? a : b;
+}
 
-    // Can add two vectors
-    vec3 a = {1, 1, 1};
-    vec3 b = {2, 2, 2};
-    vec3 c = vec3_add(a, b);
-    assert(c.x == 3 && c.y == 3 && c.z == 3);
+float max(float a, float b) {
+    return a > b ? a : b;
+}
 
-    // Can subtract two vectors
-    vec3 d = vec3_subtract(b, a);
-    assert(d.x == 1 && d.y == 1 && d.z == 1);
+int close(float a, float b) {
+    return (max(a,b) - min(a, b)) < 0.01;
+}
 
-    // Can multiply a vector by a scalar
-    vec3 e = vec3_scale(a, 5);
-    assert(e.x == 5 && e.y == 5 && e.z == 5);
+int vec3_equal(vec3 a, vec3 b) {
+    return close(a.x,b.x) && 
+           close(a.y,b.y) &&
+           close(a.z,b.z);
+}
 
-    // Can take the dot product of two vectors
-    float a_dot_b = vec3_dot(a, b);
-    assert(a_dot_b == 6);
+// TEST CASES
 
-    // Can take the cross product of two vectors
-    vec3 u = {2, 1, 1};
-    vec3 v = {1, 1, 2};
-    vec3 u_cross_v = vec3_cross(u, v);
-    assert(u_cross_v.x == 1 && u_cross_v.y == -3 && u_cross_v.z == 1);
+Test(operations, can_add_two_vectors) {
+    vec3 a = {1,1,1};
+    vec3 b = {2,2,2};
+    vec3 expected = {3,3,3};
+    
+    vec3 result = vec3_add(a, b);
 
-    // Can calculate the magnitude of a vector
-    vec3 f = {1, 2, 3};
-    float f_mag = vec3_magnitude(f);
-    assert(CLOSE(f_mag, sqrt(14))); // sqrt(4 + 4 + 4)
+    cr_assert(
+        vec3_equal(result, expected),
+        "Expected result to be {3,3,3}"
+    );
+}
 
-    // Can normalize a vector
-    vec3 f_norm = vec3_norm(f);
-    assert(CLOSE(vec3_magnitude(f_norm), 1));
+Test(operations, can_subtract_two_vectors) {
+    vec3 a = {1,1,1};
+    vec3 b = {2,2,2};
+    vec3 expected = {1,1,1};
 
-    printf("\n");
-    printf("All tests passed");
+    vec3 result = vec3_subtract(b, a);
+
+    cr_assert(
+        vec3_equal(result, expected),
+        "Expected result to be {1,1,1}"
+    );
+}
+
+Test(operations, can_multiply_vector_by_scalar) {
+    vec3 v = {1,1,1};
+    float s = 2;
+    vec3 expected = {2,2,2};
+
+    vec3 result = vec3_scale(v, s);
+
+    cr_assert(
+        vec3_equal(result, expected),
+        "Expected result to be {2,2,2}"
+    );
+}
+
+Test(operations, can_take_dot_product_of_vectors) {
+    vec3 a = {1,1,1};
+    vec3 b = {2,2,2};
+    float expected = 6;
+
+    float result = vec3_dot(a, b);
+
+    cr_assert(
+        result == expected,
+        "Expected dot product to be 6"
+    );
+}
+
+Test(operations, can_take_cross_product_of_vectors) {
+    vec3 a = {2, 1, 1};
+    vec3 b = {1, 1, 2};
+    vec3 expected = {1,-3, 1};
+
+    vec3 result = vec3_cross(a, b);
+
+    cr_assert(
+        vec3_equal(result, expected),
+        "Expected a x b to be {1, -3, 1}"
+    );
+}
+
+Test(operations, can_calc_magnitude_of_vector) {
+    vec3 v = {1, 2, 3};
+    float expected = 3.742; // = sqrt(1^2+2^2+3^2)
+
+    float result = vec3_magnitude(v);
+
+    cr_assert(
+        close(result, expected),
+        "Expected result to be ~= 3.742"
+    );
+}
+
+Test(operations, can_normalize_vectors) {
+    vec3 v = {1,1,1};
+    vec3 expected = {.577, .577, .577};
+
+    vec3 result = vec3_norm(v);
+
+    cr_assert(
+        vec3_equal(result, expected),
+        "Expected result to be {.577, .577, .577}"
+    );
 }
