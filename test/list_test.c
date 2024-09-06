@@ -64,5 +64,5 @@ Test(integration, can_assign_list_items) {
     list_assign(list, 0, &m);
     int* result = list_access(list, 0);
 
-    cr_assert(*result == 4, "Expected array index 0 to be 5");
+    cr_assert(*result == m, "Expected array index 0 to be 5");
 }
