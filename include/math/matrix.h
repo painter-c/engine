@@ -6,7 +6,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#include "utils/string.h"
+#include "common/string.h"
 
 // Data definitions
 

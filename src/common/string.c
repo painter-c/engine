@@ -1,4 +1,4 @@
-#include "utils/string.h"
+#include "common/string.h"
 
 char* su_heapify(const char* str) {
     char* new = malloc((strlen(str) + 1) + sizeof(char));

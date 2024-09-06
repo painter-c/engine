@@ -1,16 +1,22 @@
 #ifndef __LIST_H
 #define __LIST_H
 
+#include <stddef.h>
+
 typedef struct List List;
 
-List* List_Construct(int initialCapacity, int itemSizeBytes);
+List* list_new(size_t initialCapacity, size_t itemSizeBytes);
 
-void List_Destruct(List* list);
+void list_delete(List* list);
 
-void List_Append(List* list, void* element);
+void list_append(List* list, void* item);
 
-void* List_Access(List* list, int index);
+void* list_access(List* list, size_t index);
 
-int List_Size(List* list);
+// Passing a pointer to an item that is an incorrect size in bytes results 
+// in undefined behaviour.
+void list_assign(List* list, size_t index, void* item);
+
+int list_size(List* list);
 
 #endif

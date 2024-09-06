@@ -1,16 +1,17 @@
 #include "common/list.h"
 #include <string.h>
 #include <stdlib.h>
+#include <assert.h>
 
 struct List {
-    int size;
-    int capacity;
-    int initialCapacity;
-    int itemSizeBytes;
+    size_t size;
+    size_t capacity;
+    size_t initialCapacity;
+    size_t itemSizeBytes;
     void* items;
 };
 
-List* List_Construct(int initialCapacity, int itemSizeBytes) {
+List* list_new(size_t initialCapacity, size_t itemSizeBytes) {
     List* instance = malloc(sizeof(List));
     instance->size = 0;
     instance->capacity = initialCapacity;
@@ -20,7 +21,7 @@ List* List_Construct(int initialCapacity, int itemSizeBytes) {
     return instance;
 }
 
-void List_Destruct(List* list) {
+void list_delete(List* list) {
     free(list->items);
     free(list);
 }
@@ -34,7 +35,7 @@ void* _list_offset(List* list, int n) {
     return ((char*) list->items) + (n * list->itemSizeBytes);
 }
 
-void List_Append(List* list, void* item) {
+void list_append(List* list, void* item) {
     if (list->size == list->capacity) {
         _list_expand(list);
     } else {
@@ -44,7 +45,12 @@ void List_Append(List* list, void* item) {
     list->size++;
 }
 
-void* List_Access(List* list, int index) {
+void list_assign(List* list, size_t index, void* item) {
+    assert(index < list->size);
+    memcpy(_list_offset(list, index), item, list->itemSizeBytes);
+}
+
+void* list_access(List* list, size_t index) {
     if (!(index < list->size)) {
         return NULL;
     } else {
@@ -52,6 +58,6 @@ void* List_Access(List* list, int index) {
     }
 }
 
-int List_Size(List* list) {
+int list_size(List* list) {
     return list->size;
 }
